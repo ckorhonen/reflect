@@ -128,6 +128,16 @@ or simply end sessions with `/reflect`, or schedule
 `claude -p "run the reflect skill on recent sessions"` via cron or your
 harness's scheduler.
 
+## Testing and evals
+
+`tests/test_scripts.py` covers the deterministic helpers (runs in CI).
+`evals/run_eval.py` covers the skill's *behavior*: it gives an agent the
+reflect SKILL.md plus a transcript with planted signals (a repeated
+correction, a context-hogging verbose log, a twice-repeated deploy
+sequence, and a one-off distractor) and deterministically grades whether
+the reflection surfaces each signal in the right lane — and skips the
+distractor. One model call per run; not wired into CI.
+
 ## Safety model
 
 - **Applies directly:** additive edits to agent instruction files; new

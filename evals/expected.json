@@ -1,0 +1,30 @@
+{
+  "description": "Planted signals the reflect skill must surface from fixtures/planted_session.jsonl, graded by deterministic keyword checks over the reflection report.",
+  "expectations": [
+    {
+      "name": "bun-not-npm rule",
+      "why": "User corrected npm-vs-bun twice; a one-line agent rule prevents it.",
+      "must_match_all": ["bun"],
+      "must_match_any": ["rule", "AGENTS.md", "CLAUDE.md"]
+    },
+    {
+      "name": "verbose test log context reduction",
+      "why": "One verbose test run dominated context and the user complained.",
+      "must_match_all": [],
+      "must_match_any": ["verbose", "context", "log", "quiet", "failures only", "output"]
+    },
+    {
+      "name": "repeated deploy sequence",
+      "why": "The same build+deploy+curl sequence ran twice; deserves a script or command.",
+      "must_match_all": ["deploy"],
+      "must_match_any": ["script", "command", "sequence"]
+    }
+  ],
+  "must_not": [
+    {
+      "name": "README typo is not a durable learning",
+      "why": "One-off fix; extracting it means the gate failed.",
+      "reject_if_all": ["typo", "rule"]
+    }
+  ]
+}

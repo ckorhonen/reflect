@@ -43,6 +43,10 @@ EOF
 Smoke-test scripts against a real local transcript when available; label
 that as a local check, not CI.
 
+After changing any SKILL.md, run the behavioral eval (one model call, not
+in CI): `python3 evals/run_eval.py` — it feeds a planted-signal transcript
+to an agent running the skill and grades the report deterministically.
+
 ## Style
 
 - Skills speak to the agent in the imperative; the README speaks to humans.
