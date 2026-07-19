@@ -52,8 +52,12 @@ ERROR_MARKERS = (
 )
 
 
+ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]|\[[0-9;]{1,6}m")
+
+
 def normalize_signature(text):
     """Reduce an error preview to a stable signature for clustering."""
+    text = ANSI_RE.sub("", text[:400])
     sig = " ".join(text[:200].split()).lower()
     sig = re.sub(r"/[^ ]+", "<path>", sig)          # paths
     sig = re.sub(r"\d+", "<n>", sig)                # numbers, line nos

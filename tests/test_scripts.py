@@ -65,6 +65,16 @@ def test_scanner():
     check("scanner labels estimates", "estimate" in out.lower(), out)
 
 
+def test_signature_normalization():
+    sys.path.insert(0, os.path.dirname(SCANNER))
+    import scan_sessions
+    sig = scan_sessions.normalize_signature(
+        "\x1b[31mError\x1b[0m at /Users/x/app.py line 42 hash deadbeef99")
+    check("signatures strip ANSI codes", "\x1b" not in sig and "[31m" not in sig, sig)
+    check("signatures normalize paths/numbers/hashes",
+          "<path>" in sig and "<n>" in sig and "<hex>" in sig, sig)
+
+
 def test_scanner_empty():
     rc, out, err = run([sys.executable, SCANNER, "--root",
                         os.path.join(ROOT, "tests"), "--days", "0"])
