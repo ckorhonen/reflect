@@ -1,0 +1,40 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          # Oldest supported target: stock macOS python3
+          python-version: "3.9"
+      - name: Compile scripts
+        run: python3 -m py_compile skills/*/scripts/*.py
+      - name: Check skill frontmatter
+        run: |
+          python3 - <<'EOF'
+          import glob, os, sys
+          bad = []
+          for path in sorted(glob.glob("skills/*/SKILL.md")):
+              parts = open(path).read().split("---")
+              if len(parts) < 3:
+                  bad.append(path + ": missing frontmatter"); continue
+              front = parts[1]
+              for field in ("name:", "description:"):
+                  if field not in front:
+                      bad.append(path + ": missing " + field)
+              dirname = os.path.basename(os.path.dirname(path))
+              if ("name: " + dirname) not in front:
+                  bad.append(path + ": name does not match directory")
+          for b in bad:
+              print(b)
+          sys.exit(1 if bad else 0)
+          EOF
+      - name: Run script tests
+        run: python3 tests/test_scripts.py
