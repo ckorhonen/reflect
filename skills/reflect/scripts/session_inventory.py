@@ -20,6 +20,7 @@ Token counts are estimates (chars / 4) and labeled as such. Stdlib only.
 
 import argparse
 import json
+import re
 import sys
 
 
@@ -50,9 +51,15 @@ ERROR_MARKERS = (
 )
 
 
+NEGATION_RE = re.compile(
+    r"\b(?:0|no|zero|without)\s+(?:errors?|failures?|leaks?)\b"
+    r"|\b(?:errors?|failures?|failed)\s*[:=]?\s*0\b"
+    r"|no leaks found", re.IGNORECASE)
+
+
 def looks_like_error(text):
-    lowered = text[:2000].lower()
-    return any(marker in lowered for marker in ERROR_MARKERS)
+    head = NEGATION_RE.sub("", text[:2000].lower())
+    return any(marker in head for marker in ERROR_MARKERS)
 
 
 def classify(obj):

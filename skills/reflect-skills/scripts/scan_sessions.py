@@ -51,6 +51,15 @@ ERROR_MARKERS = (
     "denied", "refused", "timed out", "timeout",
 )
 
+NEGATION_RE = re.compile(
+    r"\b(?:0|no|zero|without)\s+(?:errors?|failures?|leaks?)\b"
+    r"|\b(?:errors?|failures?|failed)\s*[:=]?\s*0\b"
+    r"|no leaks found", re.IGNORECASE)
+
+
+def negation_stripped(text):
+    return NEGATION_RE.sub("", text)
+
 
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]|\[[0-9;]{1,6}m")
 
@@ -131,7 +140,7 @@ def scan_file(path, tool_calls, tool_errors, tool_out_tokens, signatures):
                     tool_out_tokens[owner] = (
                         tool_out_tokens.get(owner, 0) + est_tokens(text)
                     )
-                    lowered = text[:2000].lower()
+                    lowered = negation_stripped(text[:2000].lower())
                     is_err = bool(block.get("is_error")) or any(
                         m in lowered for m in ERROR_MARKERS
                     )

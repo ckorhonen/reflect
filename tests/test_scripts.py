@@ -65,6 +65,19 @@ def test_scanner():
     check("scanner labels estimates", "estimate" in out.lower(), out)
 
 
+def test_error_negation():
+    sys.path.insert(0, os.path.dirname(INVENTORY))
+    import session_inventory as si
+    check("gitleaks success not flagged",
+          not si.looks_like_error("INF 0 commits scanned. no leaks found"))
+    check("zero-error lint summary not flagged",
+          not si.looks_like_error("summary: 0 error(s) > lint-staged passed"))
+    check("real connection failure still flagged",
+          si.looks_like_error("fatal: unable to access repo: connection failed"))
+    check("traceback still flagged",
+          si.looks_like_error("Traceback (most recent call last):"))
+
+
 def test_signature_normalization():
     sys.path.insert(0, os.path.dirname(SCANNER))
     import scan_sessions
@@ -84,6 +97,7 @@ def test_scanner_empty():
 if __name__ == "__main__":
     test_inventory()
     test_inventory_bad_input()
+    test_error_negation()
     test_scanner()
     test_scanner_empty()
     print()
