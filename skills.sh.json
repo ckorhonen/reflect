@@ -1,0 +1,16 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Reflect",
+      "description": "Skills that make your agent better at being your agent: extract learnings from sessions, verify they work, keep memory lean, and tune the skill portfolio.",
+      "skills": [
+        "reflect",
+        "reflect-feedback",
+        "reflect-memory",
+        "reflect-skills"
+      ]
+    }
+  ]
+}
