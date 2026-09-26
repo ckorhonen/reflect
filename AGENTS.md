@@ -54,3 +54,10 @@ to an agent running the skill and grades the report deterministically.
   IDs that will stale.
 - Every autonomy claim in a SKILL.md must match the safety model in the
   README; update both together.
+
+## Completion and evidence
+
+- `python3 tests/test_scripts.py` runs the deterministic fixture tests used by `.github/workflows/validate.yml`; include it for helper behavior changes alongside the compile/frontmatter checks above. `tests/fixtures/` is the synthetic input surface. No dependency install or app server is needed.
+- Begin with `git status --short`, preserve concurrent edits, and carry authorized work through the relevant validation and repair. Ordinary reversible implementation choices do not require another approval loop. Preserve the existing before-commit checks and the behavioral-eval requirement for SKILL.md changes; a deterministic fixture pass does not replace that eval.
+- A behavioral eval invokes a model. Confirm the current task authorizes that call and its input; if unavailable or outside scope, report the exact missing prerequisite and do not claim behavioral validation. Do not harvest unrelated transcripts, expose private session content, install skills globally, or publish releases as incidental validation.
+- For instruction-only edits, inspect references and run `git diff --check`; distinguish that source check from the pre-commit and behavioral gates. Close with changed paths, executed checks/results, and remaining blockers, continuing independent authorized work when one check cannot run.
